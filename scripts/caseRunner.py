@@ -2,8 +2,12 @@
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import os
 from PyFoam.Execution.BasicRunner import BasicRunner
+import re
 
-case_directory = "backwardStepCases/"
+# Pattern to match numbers with exactly 2 decimal places
+pattern = r'\d+\.\d{2}'
+# Directory containing the flow cases
+case_directory = "flowCases/"
 case_list = os.listdir(case_directory)
 
 def solve_flow(case_name):
@@ -16,12 +20,16 @@ def solve_flow(case_name):
                         logname="solverLog")
     runner.start()
     # Get the Reynolds value
-    Re = case_name.split("-")[-1]
-    return Re, runner.runOK(), "done"
+    match = re.search(pattern, case_name)
+    if match:
+        Re = match.group(0)  
+    else:
+        raise ValueError("No Reynolds number found in the case name.")
+    return Re, case_name, runner.runOK(), "done"
 
 # Running multiple cases at once to save time
 with ProcessPoolExecutor(max_workers=6) as executor:
     futures = [executor.submit(solve_flow, case_name = os.path.join(case_directory, case)) for case in case_list]
     for f in as_completed(futures):
-        Re, ok, msg = f.result()
-        print(f"[Re={Re}] -> {msg}, success={ok}")
+        Re, case_name, ok, msg = f.result()
+        print(f"{case_name} [Re={Re}] -> {msg}, success={ok}")
