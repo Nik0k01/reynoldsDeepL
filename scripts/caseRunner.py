@@ -1,3 +1,4 @@
+"""To run this script you must have openFOAM sourced in your terminal"""
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import os
 import pathlib
