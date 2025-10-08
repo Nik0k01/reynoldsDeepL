@@ -2,9 +2,8 @@
 
 This project explores whether it’s possible to **predict the pressure drop in fluid flow** directly from **geometry type and Reynolds number**, using data generated from **OpenFOAM** simulations.
 
-It’s a follow-up to my earlier experiment where I tried to make a neural network *“look at colorful CFD plots and guess the Reynolds number.”*
-Spoiler: both humans and computers failed spectacularly.
-This time, we go tabular and more grounded.
+It’s a follow-up to my earlier experiment where I tried to make a neural network recognize Reynolds number from colorfoul plot of the flow domain. It didn't go so well, although the model could idstinguish between the laminar and turbulent regimes.
+This time, I wanted to go a bit more grounded using tabular data. .
 
 ---
 
@@ -26,26 +25,25 @@ This time, we go tabular and more grounded.
 2. **Simulation**
 
    * All cases were automated with `PyFoam`.
-   * Pressure data exported to CSV using OpenFOAM function objects.
+   * Pressure data exported to CSV.
 
 3. **Machine Learning**
 
    * Neural network with **geometry embeddings** trained to predict pressure drop.
-   * Compared with a **Random Forest Regressor** for robustness and extrapolation.
+   * Compared with a **Random Forest Regressor**.
 
 4. **Evaluation**
 
-   * Both models tested on **unseen geometries**.
-   * Random Forest achieved lower MAE and handled unknown geometry classes more gracefully.
+   * Both models tested on **unseen geometries**. They failed to predict the pressure drop accurately.
+   * Random Forest achieved lower MAE and handled unknown geometry classes better.
 
 ---
 
-## 📊 Key Findings
+## 📊 Findings
 
 * Random Forest achieved **MAE ≈ 0.23**, outperforming the neural network (**MAE ≈ 0.46**).
 * Neural networks struggled to generalize to unseen geometries.
-* Good meshing is more art than science.
-* Fancy models don’t always beat a well-tuned classical one.
+* Random forest often beat neural network on tabular data.
 
 ---
 
